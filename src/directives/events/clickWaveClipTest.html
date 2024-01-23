@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+            list-style: none;
+            box-sizing: border-box;
+        }
+
+        .board {
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
+            border: 1px solid;
+            position: relative;
+            background-color: #f0f;
+        }
+
+        #show {
+            width: 100%;
+            height: 100px;
+            border: 1px solid;
+        }
+
+        .active {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            transition: all .5s linear;
+            background-color: #eee;
+            opacity: 0.4;
+        }
+
+        .pullActive {
+            clip-path: circle(150% at 67px 45px);
+        }
+    </style>
+</head>
+
+<body>
+    <img src="https://tool.lu/netcard/">
+    <div class="board">213</div>
+</body>
+<script>
+    var ele = {
+        board: document.querySelector(".board"),
+    }
+    ele.board.onclick = function (e) {
+        // 使用时，必须保证被应用元素有设置宽高
+        let activeEle = document.createElement("div");
+        const borderRadius = window.getComputedStyle(this).borderRadius     // 确定外边界
+        activeEle.classList.add("active");
+        activeEle.style.borderRadius = borderRadius
+        let arr = [...this.children];
+        let flag = arr.some(it => {
+            return it.classList.contains("active");
+        });
+        !flag && this.appendChild(activeEle);   // 起到阻塞作用
+        activeEle.style.cssText += `clip-path: circle(0px at ${e.offsetX}px ${e.offsetY}px)`
+        setTimeout(() => {
+            new Promise((resolve, reject) => {
+                const bgcolor = window.getComputedStyle(this).backgroundColor;  // 确定起始色
+                activeEle.style.clipPath = `circle(150% at ${e.offsetX}px ${e.offsetY}px)`
+                activeEle.style.backgroundColor = bgcolor
+                activeEle.style.borderRadius = borderRadius
+                activeEle.style.opacity = "0";
+                setTimeout(() => {
+                    activeEle.remove();
+                }, 650);
+            }).then(() => {
+                activeEle.style.clipPath = `circle(0px at ${e.offsetX}px ${e.offsetY}px)`
+            });
+        }, 0);
+    }
+</script>
+
+</html>
