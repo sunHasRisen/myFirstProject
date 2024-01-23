@@ -80,6 +80,7 @@ const vClickCSSWave = {
         !flag && el.appendChild(activeEle);
       }
       activeEle.style.cssText += `clip-path: circle(0px at ${e.offsetX}px ${e.offsetY}px)`;
+      // 设置定时器，异步化
       timer1 = setTimeout(() => {
         new Promise(() => {
           const bgcolor = window.getComputedStyle(el).backgroundColor; // 确定起始色
